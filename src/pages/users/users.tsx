@@ -1,16 +1,22 @@
 import React, { FC } from 'react';
-import { ScrollView } from 'native-base';
+import { Box, ScrollView } from 'native-base';
 import { Outlet } from 'react-router-native';
 import UsersCreateNew from './outlet/users_createNew';
 import UsersList from './outlet/users_list';
+import UsersPreview from './outlet/users_preview';
 
 const UsersPage: FC = () => {
     return (
-        <ScrollView
-            p="16px"
+        <Box
+            safeArea
+            h="full"
         >
-            <Outlet />
-        </ScrollView>
+            <ScrollView
+                h="full"
+            >
+                <Outlet />
+            </ScrollView>
+        </Box>
     );
 }
 
@@ -26,7 +32,11 @@ export const getUserRoutes = () => [
                 element: <UsersList />,
             },
             {
-                path: '/newUser',
+                path: 'user/:id',
+                element: <UsersPreview />,
+            },
+            {
+                path: 'new',
                 element: <UsersCreateNew />,
             },
         ],
