@@ -11,7 +11,9 @@ const UsersList: FC = () => {
     const { users } = useAppSelector(state => state.user);
 
     useEffect(() => {
-        dispatch(getUsers());
+        if (!users) {
+            dispatch(getUsers());
+        }
     }, []);
 
     const _selectUser = (id: any) => () => {
