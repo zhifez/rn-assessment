@@ -5,7 +5,7 @@ import { getUsers } from '../actions/user.action';
 
 interface IUserState {
     isLoading: boolean;
-    users?: IUserData[],
+    users?: IUserData[];
 }
 
 const initialState: IUserState = {
@@ -32,8 +32,8 @@ const userState = createSlice({
             payload: IUserData;
         }) => {
             state.users = [
-                ...(state.users ?? []),
                 action.payload,
+                ...(state.users ?? []),
             ];
         }
     },

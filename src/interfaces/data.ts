@@ -5,7 +5,7 @@ export interface IUserData {
     email: string;
     address: { 
         street: string;
-        suite: string;
+        suite?: string;
         city: string;
         zipcode: string;
         geo: {
@@ -14,8 +14,8 @@ export interface IUserData {
         },
     },
     phone: string;
-    website: string;
-    company: {
+    website?: string;
+    company?: {
         name: string;
     },
 }

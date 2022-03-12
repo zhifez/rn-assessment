@@ -36,7 +36,7 @@ const UsersPreview: FC = () => {
     return (
         <VStack 
             px={4}
-            py={10}
+            py={5}
             w="full"
             space={2}
             alignItems="center"
