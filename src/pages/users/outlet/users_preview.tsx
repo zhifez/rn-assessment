@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useState } from 'react';
-import { Button, Divider, HStack, Text, VStack } from 'native-base';
+import { Divider, HStack, Text, VStack } from 'native-base';
 import { Navigate, useParams } from 'react-router-native';
 import { useAppSelector } from '../../../hooks/common';
 import { IUserData } from '../../../interfaces/data';
@@ -42,7 +42,7 @@ const UsersPreview: FC = () => {
             alignItems="center"
         >
             <AppBar 
-                title={userById.username}
+                title={`@${userById.username}`}
                 leading={<BackButton />}
             />
 

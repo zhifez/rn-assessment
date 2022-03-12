@@ -18,7 +18,7 @@ const AppBar: FC<IAppBar> = ({
             justifyContent="space-between"
             alignItems="center"
             flex={1}
-            mb={8}
+            mb={4}
         >
             {/* LEADING */}
             <Box flex={1}>{leading}</Box>
@@ -29,7 +29,7 @@ const AppBar: FC<IAppBar> = ({
                     fontSize={16} fontWeight="bold"
                     textAlign="center"
                 >
-                    @{title}
+                    {title}
                 </Text>
             </Box>
 
