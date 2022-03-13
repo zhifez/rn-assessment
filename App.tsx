@@ -5,6 +5,7 @@ import { NativeRouter, useLocation, useNavigate, useRoutes } from 'react-router-
 import { getUserRoutes } from './src/pages/users/users';
 import { store } from './src/redux/store';
 import { BackHandler } from 'react-native';
+import { AnyAction, Store } from '@reduxjs/toolkit';
 
 const App: FC = () => {
     const navigate = useNavigate();
@@ -28,10 +29,15 @@ const App: FC = () => {
     );
 }
 
+interface IAppWrapper {
+    storeProp?: Store<any, AnyAction>;
+}
 
-const AppWrapper = () => (
+const AppWrapper: FC<IAppWrapper> = ({
+    storeProp,
+}) => (
     <NativeBaseProvider>
-        <Provider store={store}>
+        <Provider store={storeProp ?? store}>
             <NativeRouter>
                 <App />    
             </NativeRouter>    

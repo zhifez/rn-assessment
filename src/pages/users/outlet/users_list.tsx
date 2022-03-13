@@ -36,6 +36,7 @@ const UsersList: FC = () => {
                 p={4}
                 pb={24}
                 space={3}
+                testID="users/list"
             >
                 <Fab
                     placement="bottom-right"
@@ -54,7 +55,7 @@ const UsersList: FC = () => {
                 {!!users && users.map((user, u) => 
                 <View
                     key={u}
-                    testID="userCard"
+                    testID="users/listItem"
                 >
                     <UserCard 
                         data={user}
