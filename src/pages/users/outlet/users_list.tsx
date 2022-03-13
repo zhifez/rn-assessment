@@ -54,6 +54,7 @@ const UsersList: FC = () => {
                 {!!users && users.map((user, u) => 
                 <UserCard 
                     key={u}
+                    testID="userCard"
                     data={user}
                     onSelect={_selectUser(user.id)}
                 />)}

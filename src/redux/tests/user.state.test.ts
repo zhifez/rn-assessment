@@ -1,15 +1,8 @@
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import endpoints from '../../common/endpoints';
 import { mockUsers, mockSingleUserData } from './testData';
 import { store } from '../store';
 import { getUsers } from '../actions/user.action';
 import { addUser, resetUserState } from '../reducers/user.reducer';
-
-const mockApi = () => {
-    const mock = new MockAdapter(axios);
-    mock.onGet(endpoints.getUsers).reply(200, mockUsers);
-}
+import mockApi from '../../common/mockApi';
 
 describe('User State', () => {
     beforeAll(() => {
