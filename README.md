@@ -1,6 +1,6 @@
 # RN Assessment
 
-This is a ReactNative(TS) project written (for free) for a technical assessment with Maybank.
+This is a ReactNative(TS) project written (for free) for a technical assessment with a potential future employer.
 
 ## To run
 
