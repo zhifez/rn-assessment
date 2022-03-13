@@ -5,11 +5,12 @@ import { getUsers } from '../../../redux/actions/user.action';
 import UserCard from '../../../components/userCard';
 import { useNavigate } from 'react-router-native';
 import IoIcons from 'react-native-vector-icons/Ionicons';
+import LoadingModal from '../../../components/loadingModal';
 
 const UsersList: FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { users } = useAppSelector(state => state.user);
+    const { isLoading, users } = useAppSelector(state => state.user);
 
     useEffect(() => {
         if (!users) {
@@ -31,6 +32,9 @@ const UsersList: FC = () => {
             space={3}
             pb={24}
         >
+            <LoadingModal 
+                isOpen={isLoading}
+            />
             <Fab
                 placement="bottom-right"
                 colorScheme="blue"

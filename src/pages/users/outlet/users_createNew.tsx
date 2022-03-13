@@ -14,6 +14,7 @@ import { KeyboardType, NavigatorIOS, PermissionsAndroid, Platform } from 'react-
 import Toast from 'react-native-toast-message';
 import Geolocation, { GeolocationOptions } from '@react-native-community/geolocation';
 import IoIcons from 'react-native-vector-icons/Ionicons';
+import LoadingModal from '../../../components/loadingModal';
 
 interface IInputConfig {
     name: string;
@@ -203,130 +204,135 @@ const UsersCreateNew: FC = () => {
     }
 
     return (
-        <VStack 
-            px={4}
-            py={5}
-            w="full"
-            space={2}
-            alignItems="center"
-        >
-            <AppBar 
-                title="Create New User"
-                leading={<BackButton />}
+        <>
+            <LoadingModal 
+                isOpen={isLoading}
             />
-            
-            <Formik 
-                innerRef={formRef}
-                initialValues={newInputs}
-                validationSchema={Yup.object().shape(
-                    ([
-                        ...formInputs,
-                        ...formInputs_address,
-                    ]).reduce<Record<string, any>>((result, item) => {
-                        let validation = Yup.string();
-                        // Add field type specific validation
-                        switch (item.name) {
-                        case 'email':
-                            validation = validation.email(item.invalidMessage);
-                            break;
-
-                        case 'phone':
-                            validation = validation.matches(
-                                /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-                                item.invalidMessage,
-                            );
-                            break;
-
-                        default:
-                            break;
-                        }
-                        // Add required validation
-                        if (!!item.requiredMessage) {
-                            validation = validation.required(item.requiredMessage);
-                        }
-                        result[item.name] = validation;
-                        return result;
-                    }, {})
-                )}
-                validate={_additionalValidation}
-                onSubmit={_submit}
+            <VStack 
+                px={4}
+                py={5}
+                w="full"
+                space={2}
+                alignItems="center"
             >
-                {({ 
-                    handleChange, 
-                    handleBlur, 
-                    handleSubmit, 
-                    values,
-                    errors,
-                }) => (
-                    <VStack
-                        w="full"
-                        space={4}
-                    >
-                        <Text w="full" fontSize={16} fontWeight="semibold">
-                            Details
-                        </Text>
-                        {formInputs.map((input, i) => 
-                        <CustomInput 
-                            key={i}
-                            value={values[input.name]}
-                            placeholder={input.placeholder}
-                            onChangeText={handleChange(input.name)}
-                            onBlur={handleBlur(input.name)}
-                            error={errors[input.name] as string}
-                            keyboardType={input.keyboardType ?? 'default'}
-                        />)}
+                <AppBar 
+                    title="Create New User"
+                    leading={<BackButton />}
+                />
+                
+                <Formik 
+                    innerRef={formRef}
+                    initialValues={newInputs}
+                    validationSchema={Yup.object().shape(
+                        ([
+                            ...formInputs,
+                            ...formInputs_address,
+                        ]).reduce<Record<string, any>>((result, item) => {
+                            let validation = Yup.string();
+                            // Add field type specific validation
+                            switch (item.name) {
+                            case 'email':
+                                validation = validation.email(item.invalidMessage);
+                                break;
 
-                        <Divider w="full" my={1} />
+                            case 'phone':
+                                validation = validation.matches(
+                                    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+                                    item.invalidMessage,
+                                );
+                                break;
 
-                        <Text w="full" fontSize={16} fontWeight="semibold">
-                            Address
-                        </Text>
-                        {formInputs_address.map((input, i) => 
-                        <CustomInput 
-                            key={i}
-                            value={values[input.name]}
-                            placeholder={input.placeholder}
-                            onChangeText={handleChange(input.name)}
-                            onBlur={handleBlur(input.name)}
-                            error={errors[input.name] as string}
-                            keyboardType={input.keyboardType ?? 'default'}
-                        />)}
+                            default:
+                                break;
+                            }
+                            // Add required validation
+                            if (!!item.requiredMessage) {
+                                validation = validation.required(item.requiredMessage);
+                            }
+                            result[item.name] = validation;
+                            return result;
+                        }, {})
+                    )}
+                    validate={_additionalValidation}
+                    onSubmit={_submit}
+                >
+                    {({ 
+                        handleChange, 
+                        handleBlur, 
+                        handleSubmit, 
+                        values,
+                        errors,
+                    }) => (
+                        <VStack
+                            w="full"
+                            space={4}
+                        >
+                            <Text w="full" fontSize={16} fontWeight="semibold">
+                                Details
+                            </Text>
+                            {formInputs.map((input, i) => 
+                            <CustomInput 
+                                key={i}
+                                value={values[input.name]}
+                                placeholder={input.placeholder}
+                                onChangeText={handleChange(input.name)}
+                                onBlur={handleBlur(input.name)}
+                                error={errors[input.name] as string}
+                                keyboardType={input.keyboardType ?? 'default'}
+                            />)}
 
-                        <VStack>
-                            <HStack
-                                justifyContent="space-between"
-                                alignItems="center"
-                                flex={1}
-                            >
-                                <Text flex={1} fontWeight="semibold">Geolocation{'\n'}(readonly)</Text>
-                                
-                                <HStack flex={2} space={2} alignItems="center">
-                                    <Text flex={4} textAlign="right">{geoDisplayValue}</Text>
-                                    {!values['geo'] &&
-                                    <Button 
-                                        w={12}
-                                        onPress={_getLocationPermission}
-                                    >
-                                        <IoIcons 
-                                            name="refresh"
-                                            size={20}
-                                            color="white"
-                                        />    
-                                    </Button>}
+                            <Divider w="full" my={1} />
+
+                            <Text w="full" fontSize={16} fontWeight="semibold">
+                                Address
+                            </Text>
+                            {formInputs_address.map((input, i) => 
+                            <CustomInput 
+                                key={i}
+                                value={values[input.name]}
+                                placeholder={input.placeholder}
+                                onChangeText={handleChange(input.name)}
+                                onBlur={handleBlur(input.name)}
+                                error={errors[input.name] as string}
+                                keyboardType={input.keyboardType ?? 'default'}
+                            />)}
+
+                            <VStack>
+                                <HStack
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    flex={1}
+                                >
+                                    <Text flex={1} fontWeight="semibold">Geolocation{'\n'}(readonly)</Text>
+                                    
+                                    <HStack flex={2} space={2} alignItems="center">
+                                        <Text flex={4} textAlign="right">{geoDisplayValue}</Text>
+                                        {!values['geo'] &&
+                                        <Button 
+                                            w={12}
+                                            onPress={_getLocationPermission}
+                                        >
+                                            <IoIcons 
+                                                name="refresh"
+                                                size={20}
+                                                color="white"
+                                            />    
+                                        </Button>}
+                                    </HStack>
                                 </HStack>
-                            </HStack>
-                            {!!errors['geo'] &&
-                            <ErrorCode>{errors['geo']}</ErrorCode>}
-                        </VStack>
+                                {!!errors['geo'] &&
+                                <ErrorCode>{errors['geo']}</ErrorCode>}
+                            </VStack>
 
-                        <CustomButton 
-                            label="Submit"
-                            onPress={handleSubmit}
-                        />
-                    </VStack>
-                )}
-            </Formik>
-        </VStack>
+                            <CustomButton 
+                                label="Submit"
+                                onPress={handleSubmit}
+                            />
+                        </VStack>
+                    )}
+                </Formik>
+            </VStack>
+        </>
     );
 }
 
