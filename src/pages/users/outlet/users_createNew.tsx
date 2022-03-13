@@ -1,21 +1,22 @@
-import React, { FC, useState } from 'react';
-import { Divider, Input, Text, VStack } from 'native-base';
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Divider, HStack, Input, Text, VStack } from 'native-base';
 import AppBar from '../../../components/appBar';
 import BackButton from '../../../components/backButton';
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import { IUserData } from '../../../interfaces/data';
 import { useAppDispatch } from '../../../hooks/common';
 import { addUser } from '../../../redux/reducers/user.reducer';
 import { useNavigate } from 'react-router-native';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/customButton';
-import CustomInput from '../../../components/customInput';
-import { KeyboardType } from 'react-native';
+import CustomInput, { ErrorCode } from '../../../components/customInput';
+import { KeyboardType, NavigatorIOS, PermissionsAndroid, Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
+import Geolocation, { GeolocationOptions } from '@react-native-community/geolocation';
 
 interface IInputConfig {
     name: string;
-    placeholder: string;
+    placeholder?: string;
     invalidMessage?: string;
     requiredMessage?: string;
     keyboardType?: KeyboardType;
@@ -80,8 +81,56 @@ const formInputs_address: IInputConfig[] = [
 ];
 
 const UsersCreateNew: FC = () => {
+    const formRef = useRef<FormikProps<any>>(null);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const [isLocationAllowed, setIsLocationAllowed] = useState<boolean>(false);
+    const [locationError, setLocationError] = useState<string | undefined>('Not available');
+
+    useEffect(() => {
+        _getLocationPermission();
+    }, []);
+
+    const _getLocationPermission = useCallback(async () => {
+        if (!!formRef.current) {
+            let hasPermission = false;
+            if (Platform.OS === 'android') {
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                );
+                hasPermission = (granted === PermissionsAndroid.RESULTS.GRANTED);
+            }
+            
+            if (!!hasPermission) {
+                const config: GeolocationOptions = {
+                    enableHighAccuracy: false,
+                    timeout: 2000,
+                    maximumAge: 3600000,
+                };
+
+                Geolocation.getCurrentPosition(
+                    info => {
+                        let nextValues = {...formRef.current!.values};
+                        nextValues['geo'] = {
+                            lat: info.coords.latitude,
+                            lng: info.coords.longitude,
+                        };
+                        formRef.current!.setValues(nextValues);
+                        setLocationError(undefined);
+                    },
+                    error => {
+                        console.log('Error', error);
+                        setLocationError(error.message);
+                    },
+                    config,
+                );
+                setIsLocationAllowed(true);
+            }
+            else {
+                setIsLocationAllowed(false);
+            }
+        }
+    }, [formRef.current]);
 
     const newInputs = useState<Record<string, any>>({
         // Details
@@ -97,14 +146,33 @@ const UsersCreateNew: FC = () => {
         suite: '',
         city: '',
         zipcode: '',
-        geo: {
-            lat: '',
-            lg: '',
-        },
+        geo: null,
     })[0];
 
+    const _additionalValidation = (values: Record<string, any>) => {
+        let errors: Record<string, string> = {};
+        if (!values['geo']) {
+            errors['geo'] = 'Geolocation is required';
+        }
+        return errors;
+    }
+
+    const geoDisplayValue = useMemo(() => {
+        if (!!formRef.current) {
+            if (!!isLocationAllowed) {
+                let values = formRef.current.values;
+                if (!!values && !!values['geo']) {
+                    return `${values['geo']['lat']}, ${values['geo']['lng']}`;
+                }
+                return locationError;
+            }
+            else {
+                return 'Please turn on your location';
+            }
+        }
+    }, [formRef.current, formRef.current?.values['geo']]);
+
     const _submit = (values: Record<string, any>) => {
-        console.log(values);
         let newUser: IUserData = {
             name: values['name'],
             username: values['username'],
@@ -146,7 +214,8 @@ const UsersCreateNew: FC = () => {
                 leading={<BackButton />}
             />
             
-            <Formik
+            <Formik 
+                innerRef={formRef}
                 initialValues={newInputs}
                 validationSchema={Yup.object().shape(
                     ([
@@ -178,6 +247,9 @@ const UsersCreateNew: FC = () => {
                         return result;
                     }, {})
                 )}
+                validate={_additionalValidation}
+                validateOnChange={false}
+                validateOnBlur={false}
                 onSubmit={_submit}
             >
                 {({ 
@@ -220,6 +292,20 @@ const UsersCreateNew: FC = () => {
                             error={errors[input.name] as string}
                             keyboardType={input.keyboardType ?? 'default'}
                         />)}
+
+                        <VStack>
+                            <HStack
+                                justifyContent="space-between"
+                                alignItems="center"
+                                flex={1}
+                            >
+                                <Text flex={1} fontWeight="semibold">Geolocation{'\n'}(readonly)</Text>
+                                <Text flex={1} textAlign="right">{geoDisplayValue}</Text>
+                            </HStack>
+                            {!!errors['geo'] &&
+                            <ErrorCode>{errors['geo']}</ErrorCode>}
+                        </VStack>
+
                         <CustomButton 
                             label="Submit"
                             onPress={handleSubmit}

@@ -2,7 +2,7 @@ import { IInputProps, Input, Text, VStack } from 'native-base';
 import React, { FC } from 'react';
 import styled from 'styled-components/native';
 
-const _ErrorCode = styled(Text)`
+export const ErrorCode = styled(Text)`
     font-size: 10px;
     color: red;
 `;
@@ -24,7 +24,7 @@ const CustomInput: FC<ICustomInput> = ({
                 {...fields}
             />
             {!!error && 
-            <_ErrorCode>{error}</_ErrorCode>}
+            <ErrorCode>{error}</ErrorCode>}
         </VStack>
     );
 }
