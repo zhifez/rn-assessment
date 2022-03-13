@@ -6,6 +6,7 @@ import UserCard from '../../../components/userCard';
 import { useNavigate } from 'react-router-native';
 import IoIcons from 'react-native-vector-icons/Ionicons';
 import LoadingModal from '../../../components/loadingModal';
+import { View } from 'react-native';
 
 const UsersList: FC = () => {
     const dispatch = useAppDispatch();
@@ -16,7 +17,6 @@ const UsersList: FC = () => {
         if (!users) {
             dispatch(getUsers());
         }
-        console.log(users);
     }, []);
 
     const _selectUser = (id: any) => () => {
@@ -52,12 +52,15 @@ const UsersList: FC = () => {
                 </Text>
                 <Divider w="full" />
                 {!!users && users.map((user, u) => 
-                <UserCard 
+                <View
                     key={u}
                     testID="userCard"
-                    data={user}
-                    onSelect={_selectUser(user.id)}
-                />)}
+                >
+                    <UserCard 
+                        data={user}
+                        onSelect={_selectUser(user.id)}
+                    />
+                </View>)}
             </VStack>
         </>
     );
