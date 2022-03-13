@@ -27,35 +27,37 @@ const UsersList: FC = () => {
     }
 
     return (
-        <VStack 
-            p={4}
-            space={3}
-            pb={24}
-        >
+        <>
             <LoadingModal 
                 isOpen={isLoading}
             />
-            <Fab
-                placement="bottom-right"
-                colorScheme="blue"
-                size="lg"
-                icon={<IoIcons name="add" size={24} color="white" />}
-                onPress={_createNewUser}
-            />
-            <Text 
-                fontSize={20} 
-                fontWeight="bold"
+            <VStack 
+                p={4}
+                pb={24}
+                space={3}
             >
-                Users
-            </Text>
-            <Divider w="full" />
-            {!!users && users.map((user, u) => 
-            <UserCard 
-                key={u}
-                data={user}
-                onSelect={_selectUser(user.id)}
-            />)}
-        </VStack>
+                <Fab
+                    placement="bottom-right"
+                    colorScheme="blue"
+                    size="lg"
+                    icon={<IoIcons name="add" size={24} color="white" />}
+                    onPress={_createNewUser}
+                />
+                <Text 
+                    fontSize={20} 
+                    fontWeight="bold"
+                >
+                    Users
+                </Text>
+                <Divider w="full" />
+                {!!users && users.map((user, u) => 
+                <UserCard 
+                    key={u}
+                    data={user}
+                    onSelect={_selectUser(user.id)}
+                />)}
+            </VStack>
+        </>
     );
 }
 
