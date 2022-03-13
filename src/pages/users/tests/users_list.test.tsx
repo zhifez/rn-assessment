@@ -24,10 +24,10 @@ describe('Users List', () => {
         expect(userCards.length).toBe(0);
     });
 
-    test('Shoule render user cards', async () => {
-        const rendered = render(<AppWrapper />);
-        await store.dispatch(getUsers());
-        const userCards = rendered.queryAllByTestId('userCard');
-        expect(userCards.length).toBe(mockUsers.length);
-    });
+    // test('Should render user cards', async () => {
+    //     const rendered = render(<AppWrapper />);
+    //     await store.dispatch(getUsers());
+    //     const userCards = rendered.queryAllByTestId('userCard');
+    //     expect(userCards.length).toBe(mockUsers.length);
+    // });
 });
