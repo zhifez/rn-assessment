@@ -9,7 +9,6 @@ export const getUsers = createAsyncThunk<
 >('user/getUsers', async (_, { rejectWithValue }) => {
     try {
         const response = await axios.get('https://jsonplaceholder.typicode.com/users');
-        console.log(response.data);
         return response.data;
     } catch (err: any) {
         let error: AxiosError<any> = err;

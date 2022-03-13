@@ -31,8 +31,11 @@ const userState = createSlice({
         addUser: (state, action: {
             payload: IUserData;
         }) => {
+            let newUser: IUserData = {...action.payload};
+            newUser.id = Date.now();
+            console.log('addUser', newUser);
             state.users = [
-                action.payload,
+                newUser,
                 ...(state.users ?? []),
             ];
         }

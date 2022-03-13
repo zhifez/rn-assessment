@@ -14,9 +14,9 @@ const UsersPreview: FC = () => {
 
     const userById: IUserData | undefined = useMemo(() => {
         if (!!users && users.length > 0) {
-            let findUser = users.filter(u => u.id.toString() === id);
+            let findUser = users.filter(u => u.id!.toString() === id);
             if (findUser.length > 0) {
-                setUserImage(`https://i.pravatar.cc/30${id}`);
+                setUserImage(`https://i.pravatar.cc/${(300 + findUser[0].id!)}`);
                 return findUser[0];
             }
         }
@@ -62,7 +62,7 @@ const UsersPreview: FC = () => {
                 justifyContent="space-between"
             >
                 <Text fontSize={16} fontWeight="semibold">Address</Text>
-                <Text fontSize={16}>{formatFullAddress}</Text>
+                <Text fontSize={16} textAlign="right">{formatFullAddress}</Text>
             </HStack>
 
             <HStack
@@ -86,7 +86,9 @@ const UsersPreview: FC = () => {
                 justifyContent="space-between"
             >
                 <Text fontSize={16} fontWeight="semibold">Website</Text>
-                <Text fontSize={16}>{userById.website ?? '-'}</Text>
+                <Text fontSize={16}>
+                    {!!userById.website ? userById.website : 'Not available'}
+                </Text>
             </HStack>
 
             <HStack
@@ -94,7 +96,9 @@ const UsersPreview: FC = () => {
                 justifyContent="space-between"
             >
                 <Text fontSize={16} fontWeight="semibold">Company</Text>
-                <Text fontSize={16}>{!!userById.company ? userById.company.name : '-'}</Text>
+                <Text fontSize={16}>
+                    {!!userById.company && !!userById.company.name ? userById.company.name : 'Not available'}
+                </Text>
             </HStack>
         </VStack>
     );

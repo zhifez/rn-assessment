@@ -15,7 +15,8 @@ const CircleAvatar: FC<ICircleAvatar> = ({
         overflow="hidden"
         bgColor="gray.100"
     >
-        <Image 
+        <Image  
+            key={avatarUri}
             w="full"
             h="full"
             source={{
