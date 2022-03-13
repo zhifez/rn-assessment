@@ -16,7 +16,7 @@ import Geolocation, { GeolocationOptions } from '@react-native-community/geoloca
 import IoIcons from 'react-native-vector-icons/Ionicons';
 import LoadingModal from '../../../components/loadingModal';
 
-interface IInputConfig {
+export interface IInputConfig {
     name: string;
     placeholder?: string;
     invalidMessage?: string;
@@ -214,6 +214,7 @@ const UsersCreateNew: FC = () => {
                 w="full"
                 space={2}
                 alignItems="center"
+                testID="users/createNew"
             >
                 <AppBar 
                     title="Create New User"
@@ -273,11 +274,13 @@ const UsersCreateNew: FC = () => {
                             {formInputs.map((input, i) => 
                             <CustomInput 
                                 key={i}
+                                testID={`input/${input.name}`}
                                 value={values[input.name]}
                                 placeholder={input.placeholder}
                                 onChangeText={handleChange(input.name)}
                                 onBlur={handleBlur(input.name)}
                                 error={errors[input.name] as string}
+                                errorId={`input-error/${input.name}`}
                                 keyboardType={input.keyboardType ?? 'default'}
                             />)}
 
@@ -289,11 +292,13 @@ const UsersCreateNew: FC = () => {
                             {formInputs_address.map((input, i) => 
                             <CustomInput 
                                 key={i}
+                                testID={`input/${input.name}`}
                                 value={values[input.name]}
                                 placeholder={input.placeholder}
                                 onChangeText={handleChange(input.name)}
                                 onBlur={handleBlur(input.name)}
                                 error={errors[input.name] as string}
+                                errorId={`input-error/${input.name}`}
                                 keyboardType={input.keyboardType ?? 'default'}
                             />)}
 
@@ -311,6 +316,7 @@ const UsersCreateNew: FC = () => {
                                         <Button 
                                             w={12}
                                             onPress={_getLocationPermission}
+                                            testID="retryButton"
                                         >
                                             <IoIcons 
                                                 name="refresh"
@@ -321,12 +327,13 @@ const UsersCreateNew: FC = () => {
                                     </HStack>
                                 </HStack>
                                 {!!errors['geo'] &&
-                                <ErrorCode>{errors['geo']}</ErrorCode>}
+                                <ErrorCode testID="input-error/geo">{errors['geo']}</ErrorCode>}
                             </VStack>
 
                             <CustomButton 
                                 label="Submit"
                                 onPress={handleSubmit}
+                                testID="submitButton"
                             />
                         </VStack>
                     )}

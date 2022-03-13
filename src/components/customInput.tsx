@@ -9,10 +9,12 @@ export const ErrorCode = styled(Text)`
 
 interface ICustomInput extends IInputProps {
     error?: string;
+    errorId?: string;
 }
 
 const CustomInput: FC<ICustomInput> = ({
     error,
+    errorId,
     ...fields
 }) => {
     return (
@@ -24,7 +26,7 @@ const CustomInput: FC<ICustomInput> = ({
                 {...fields}
             />
             {!!error && 
-            <ErrorCode>{error}</ErrorCode>}
+            <ErrorCode testID={errorId}>{error}</ErrorCode>}
         </VStack>
     );
 }

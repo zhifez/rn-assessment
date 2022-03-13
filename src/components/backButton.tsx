@@ -12,8 +12,9 @@ const BackButton: FC = () => {
     }
 
     return (
-        <TouchableOpacity
+        <TouchableOpacity 
             onPress={_back}
+            testID={'backButton'}
         >
             <Box 
                 p={2}

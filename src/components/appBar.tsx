@@ -19,22 +19,34 @@ const AppBar: FC<IAppBar> = ({
             alignItems="center"
             flex={1}
             mb={4}
+            testID="appBar"
         >
             {/* LEADING */}
-            <Box flex={1}>{leading}</Box>
+            <Box 
+                flex={1}
+                testID="appBar/leading"
+            >
+                {leading}
+            </Box>
 
             {/* TITLE */}
             <Box flex={2}>
                 <Text 
                     fontSize={16} fontWeight="bold"
                     textAlign="center"
+                    testID="appBar/title"
                 >
                     {title}
                 </Text>
             </Box>
 
             {/* TRAILING */}
-            <Box flex={1}>{trailing}</Box>
+            <Box 
+                flex={1}
+                testID="appBar/trailing"
+            >
+                {trailing}
+            </Box>
         </HStack>
     );
 }

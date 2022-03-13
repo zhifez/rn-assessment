@@ -31,18 +31,31 @@ const App: FC = () => {
 
 interface IAppWrapper {
     storeProp?: Store<any, AnyAction>;
+    testOptions?: {
+        initialRoutes: string[];
+    };
 }
 
 const AppWrapper: FC<IAppWrapper> = ({
     storeProp,
-}) => (
-    <NativeBaseProvider>
-        <Provider store={storeProp ?? store}>
-            <NativeRouter>
-                <App />    
-            </NativeRouter>    
-        </Provider>
-    </NativeBaseProvider>
-)
+    testOptions,
+}) => {
+    const inset = {
+        frame: { x: 0, y: 0, width: 0, height: 0 },
+        insets: { top: 0, left: 0, right: 0, bottom: 0 },
+    };
+
+    return (
+        <NativeBaseProvider initialWindowMetrics={!!testOptions ? inset : undefined}>
+            <Provider store={storeProp ?? store}>
+                <NativeRouter 
+                    initialEntries={!!testOptions ? testOptions.initialRoutes : undefined}
+                >
+                    <App />    
+                </NativeRouter>    
+            </Provider>
+        </NativeBaseProvider>
+    );
+}
 
 export default AppWrapper;
