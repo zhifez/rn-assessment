@@ -4,7 +4,7 @@ This is a ReactNative(TS) project written (for free) for a technical assessment 
 
 ## To run
 
-Run on android:
+Run on Android:
 
 ```yarn android```
 

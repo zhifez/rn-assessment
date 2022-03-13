@@ -16,6 +16,7 @@ const UsersList: FC = () => {
         if (!users) {
             dispatch(getUsers());
         }
+        console.log(users);
     }, []);
 
     const _selectUser = (id: any) => () => {

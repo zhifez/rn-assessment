@@ -28,12 +28,12 @@ const userState = createSlice({
     name: 'user',
     initialState,
     reducers: {
+        resetUserState: () => initialState,
         addUser: (state, action: {
             payload: IUserData;
         }) => {
             let newUser: IUserData = {...action.payload};
             newUser.id = Date.now();
-            console.log('addUser', newUser);
             state.users = [
                 newUser,
                 ...(state.users ?? []),
@@ -50,5 +50,5 @@ const userState = createSlice({
     },
 });
 
-export const { addUser } = userState.actions;
+export const { addUser, resetUserState } = userState.actions;
 export default userState.reducer;
