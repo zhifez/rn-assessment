@@ -20,16 +20,28 @@ describe('User State', () => {
         store.dispatch(resetUserState());
     });
 
-    test('Should receive users list', async () => {
+    test('Should receive users list on dispatching getUsers', async () => {
         await store.dispatch(getUsers());
         const userState = store.getState().user;
         expect(userState.users).toEqual(mockUsers);
     });
 
-    test('Should add one more user to users list', () => {
-        // store.dispatch(addUser(mockSingleUserData));
-        const userState = store.getState().user;
-        console.log(userState.users);
+    test('Should add one user to an empty/undefined list', () => {
+        let userState = store.getState().user;
         expect(userState.users).toBeUndefined();
+
+        store.dispatch(addUser(mockSingleUserData));
+        userState = store.getState().user;
+        expect(userState.users?.length).toBe(1);
+    });
+
+    test('Should add one user to a defined list', async () => {
+        await store.dispatch(getUsers());
+        let userState = store.getState().user;
+        expect(userState.users).toBeDefined();
+
+        store.dispatch(addUser(mockSingleUserData));
+        userState = store.getState().user;
+        expect(userState.users?.length).toBe(mockUsers.length + 1);
     });
 });
