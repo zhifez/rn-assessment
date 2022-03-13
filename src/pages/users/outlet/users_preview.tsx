@@ -69,7 +69,7 @@ const UsersPreview: FC = () => {
                 w="full"
                 justifyContent="space-between"
             >
-                <Text fontSize={16} fontWeight="semibold">GEO</Text>
+                <Text fontSize={16} fontWeight="semibold">Geolocation</Text>
                 <Text fontSize={16}>{userById.address.geo.lat}, {userById.address.geo.lng}</Text>
             </HStack>
 

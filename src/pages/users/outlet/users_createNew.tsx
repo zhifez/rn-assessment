@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Divider, HStack, Input, Text, VStack } from 'native-base';
+import { Button, Divider, HStack, Input, Text, VStack } from 'native-base';
 import AppBar from '../../../components/appBar';
 import BackButton from '../../../components/backButton';
 import { Formik, FormikProps } from 'formik';
@@ -13,6 +13,7 @@ import CustomInput, { ErrorCode } from '../../../components/customInput';
 import { KeyboardType, NavigatorIOS, PermissionsAndroid, Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Geolocation, { GeolocationOptions } from '@react-native-community/geolocation';
+import IoIcons from 'react-native-vector-icons/Ionicons';
 
 interface IInputConfig {
     name: string;
@@ -84,6 +85,23 @@ const UsersCreateNew: FC = () => {
     const formRef = useRef<FormikProps<any>>(null);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const newInputs = useState<Record<string, any>>({
+        // Details
+        name: '',
+        username: '',
+        email: '',
+        phone: '',
+        website: '',
+        company: '',
+
+        // Address
+        address: '', // aka 'street'
+        suite: '',
+        city: '',
+        zipcode: '',
+        geo: null,
+    })[0];
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isLocationAllowed, setIsLocationAllowed] = useState<boolean>(false);
     const [locationError, setLocationError] = useState<string | undefined>('Not available');
 
@@ -93,6 +111,7 @@ const UsersCreateNew: FC = () => {
 
     const _getLocationPermission = useCallback(async () => {
         if (!!formRef.current) {
+            setIsLoading(true);
             let hasPermission = false;
             if (Platform.OS === 'android') {
                 const granted = await PermissionsAndroid.request(
@@ -110,12 +129,10 @@ const UsersCreateNew: FC = () => {
 
                 Geolocation.getCurrentPosition(
                     info => {
-                        let nextValues = {...formRef.current!.values};
-                        nextValues['geo'] = {
+                        formRef.current!.setFieldValue('geo', {
                             lat: info.coords.latitude,
                             lng: info.coords.longitude,
-                        };
-                        formRef.current!.setValues(nextValues);
+                        }, false);
                         setLocationError(undefined);
                     },
                     error => {
@@ -129,25 +146,9 @@ const UsersCreateNew: FC = () => {
             else {
                 setIsLocationAllowed(false);
             }
+            setIsLoading(false);
         }
     }, [formRef.current]);
-
-    const newInputs = useState<Record<string, any>>({
-        // Details
-        name: '',
-        username: '',
-        email: '',
-        phone: '',
-        website: '',
-        company: '',
-
-        // Address
-        address: '', // aka 'street'
-        suite: '',
-        city: '',
-        zipcode: '',
-        geo: null,
-    })[0];
 
     const _additionalValidation = (values: Record<string, any>) => {
         let errors: Record<string, string> = {};
@@ -248,8 +249,6 @@ const UsersCreateNew: FC = () => {
                     }, {})
                 )}
                 validate={_additionalValidation}
-                validateOnChange={false}
-                validateOnBlur={false}
                 onSubmit={_submit}
             >
                 {({ 
@@ -300,7 +299,21 @@ const UsersCreateNew: FC = () => {
                                 flex={1}
                             >
                                 <Text flex={1} fontWeight="semibold">Geolocation{'\n'}(readonly)</Text>
-                                <Text flex={1} textAlign="right">{geoDisplayValue}</Text>
+                                
+                                <HStack flex={2} space={2} alignItems="center">
+                                    <Text flex={4} textAlign="right">{geoDisplayValue}</Text>
+                                    {!values['geo'] &&
+                                    <Button 
+                                        w={12}
+                                        onPress={_getLocationPermission}
+                                    >
+                                        <IoIcons 
+                                            name="refresh"
+                                            size={20}
+                                            color="white"
+                                        />    
+                                    </Button>}
+                                </HStack>
                             </HStack>
                             {!!errors['geo'] &&
                             <ErrorCode>{errors['geo']}</ErrorCode>}
