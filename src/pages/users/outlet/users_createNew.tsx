@@ -8,10 +8,10 @@ import { useAppDispatch } from '../../../hooks/common';
 import { addUser } from '../../../redux/reducers/user.reducer';
 import { useNavigate } from 'react-router-native';
 import * as Yup from 'yup';
-import styled from 'styled-components/native';
 import CustomButton from '../../../components/customButton';
 import CustomInput from '../../../components/customInput';
 import { KeyboardType } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 interface IInputConfig {
     name: string;
@@ -125,6 +125,12 @@ const UsersCreateNew: FC = () => {
         };
         dispatch(addUser(newUser));
         navigate('/', { replace: true, });
+
+        Toast.show({
+            type: 'success',
+            text1: 'New user created!',
+            text2: `Welcome ${newUser.name}`
+        });
     }
 
     return (

@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-native';
 import UsersCreateNew from './outlet/users_createNew';
 import UsersList from './outlet/users_list';
 import UsersPreview from './outlet/users_preview';
+import Toast from 'react-native-toast-message';
 
 const UsersPage: FC = () => {
     return (
@@ -16,6 +17,7 @@ const UsersPage: FC = () => {
             >
                 <Outlet />
             </ScrollView>
+            <Toast />
         </Box>
     );
 }
